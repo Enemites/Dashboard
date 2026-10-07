@@ -1,52 +1,52 @@
 # Enemites Internal Analytics
 
-Dashboard internal untuk [Enemites/Waitlist-landing-page](https://github.com/Enemites/Waitlist-landing-page).
+Internal analytics for [Enemites/Waitlist-landing-page](https://github.com/Enemites/Waitlist-landing-page), with a neutral interface designed for team operations.
 
-## Stack dan sumber data
+## Stack and data source
 
-- Next.js App Router, React, TypeScript, Recharts, Geist.
-- Frontend dan server routes di Vercel project `enemites-analytics`.
-- Neon project `floral-flower-85390584`, database `neondb`, branch `production` yang sama dengan landing page.
-- Role khusus `dashboard_reader`. Aplikasi hanya membaca tabel waitlist dan formulir; tidak menjalankan migrasi, insert, update, atau delete terhadap datanya.
-- Pool Postgres dengan TLS terverifikasi, maksimum 3 koneksi, timeout query 10 detik, dan `attachDatabasePool` untuk Vercel Fluid compute.
+- Next.js App Router, React, TypeScript, Recharts, and Geist.
+- Frontend and server routes hosted on the Vercel project `enemites-analytics`.
+- Shared Neon project `floral-flower-85390584`, database `neondb`, and `production` branch used by the landing page.
+- Dedicated `dashboard_reader` role. The application only reads waitlist and form data; it does not run migrations or modify these records.
+- Postgres pool with verified TLS, a maximum of three connections, a 10-second query timeout, and `attachDatabasePool` for Vercel Fluid compute.
 
-## Menjalankan secara lokal
+## Local development
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Buka http://127.0.0.1:3000. Untuk setup baru, isi `.env.local` berdasarkan `.env.example`. Konfigurasi lokal awal sudah dibuat dan diabaikan Git. Kunci akses tim disimpan di `.setup/access-key.txt`; file ini juga diabaikan Git.
+Open [http://127.0.0.1:3000](http://127.0.0.1:3000). For a new setup, create `.env.local` from `.env.example`. The initial local configuration and team access key at `.setup/access-key.txt` are ignored by Git.
 
-Variabel server yang wajib tersedia: `DATABASE_URL`, `DASHBOARD_ACCESS_KEY`, `SESSION_SECRET`. Jangan menggunakan prefix `NEXT_PUBLIC_` untuk secret.
+Required server environment variables: `DATABASE_URL`, `DASHBOARD_ACCESS_KEY`, and `SESSION_SECRET`. Never use the `NEXT_PUBLIC_` prefix for secrets.
 
-Koneksi `DATABASE_URL` harus memakai role yang hanya memiliki izin pada tabel yang diperlukan. Panduan grant ada di `database/reader-grants.sql`; jalankan hanya sebagai database owner setelah membuat role LOGIN khusus, bukan dari dashboard. Jangan mengganti koneksi dengan role pemilik database.
+The database connection must use a role with access only to the required tables and columns. See `database/reader-grants.sql` for grants; run them as the database owner after creating a dedicated LOGIN role. Do not use the database owner's credentials in the dashboard.
 
-## Fitur dan definisi metrik
+## Features and metric definitions
 
-- Ringkasan pendaftaran, jumlah yang setuju menerima update, negara yang tercatat, serta grafik harian dan kumulatif.
-- Segmentasi umur, perangkat, negara, browser, dan sistem operasi.
-- Daftar waitlist dengan pencarian nama/email/telepon, pagination 10 baris, detail, dan ekspor CSV.
-- Ringkasan formulir, status aktif/belum kedaluwarsa, dan jumlah respons pada periode terpilih.
-- Halaman sumber data untuk status koneksi, waktu data terakhir, dan cakupan metrik.
-- Filter tersimpan di URL, dapat disegarkan dan dibagikan kepada anggota tim yang memiliki akses.
+- Registration totals, update opt-ins, recorded countries, and daily or cumulative charts.
+- Audience breakdowns by age, device, country, browser, and operating system.
+- Searchable waitlist records with 10-row pagination, registration details, and CSV export.
+- Form totals, active and unexpired status, and response counts within the selected period.
+- Data source details, connection status, latest registration time, and metric coverage.
+- Filters stored in the URL so team members with access can refresh or share a view.
 
-Waktu laporan menggunakan **Asia/Jakarta (WIB)**. Filter 7/30/90 hari memasukkan hari ini, mulai pukul 00:00 WIB pada hari pertama sampai waktu pembacaan data. Perbandingan menggunakan rentang sebelumnya dengan durasi sama; ketika periode sebelumnya nol, tidak ada persentase pertumbuhan yang dibuat. Grafik kumulatif dihitung mulai dari awal periode dan segmen yang dipilih. Semua waktu adalah default agar riwayat pendaftaran tetap terlihat meskipun tidak ada pendaftaran baru belakangan ini.
+Reports use **Asia/Jakarta (UTC+7)** with English date and number formatting. The 7-, 30-, and 90-day filters include today, starting at midnight on the first day and ending when the data is read. Comparisons use the preceding period of equal duration. When that period has no registrations, the dashboard displays the zero baseline without inventing a growth percentage. Cumulative charts start at the beginning of the selected period and audience segment. All time is the default so historical registrations remain visible.
 
-Filter audiens berlaku pada statistik, grafik, segmentasi, daftar dan ekspor waitlist. Pencarian teks hanya membatasi daftar dan ekspor; tidak mengubah statistik audiens. Formulir mengikuti filter periode saja. Lokasi kosong dan lokasi `Local (timezone)` bukan negara terverifikasi dan dikelompokkan sebagai tidak diketahui. Informasi browser/perangkat adalah metadata saat pendaftaran, bukan jumlah pengunjung situs.
+Audience filters apply to waitlist statistics, charts, segments, records, and exports. Text search affects only the records and export. Forms follow the date range only. Missing locations and `Local (timezone)` values are grouped as unknown because they do not identify a verified country. Browser and device information describe registrations, not site visitor counts.
 
-Data kunjungan, pageview, UTM/referrer dan rasio konversi **belum tersedia di Neon**. Dashboard menampilkan status tersebut secara eksplisit; tidak menggunakan data contoh maupun estimasi. Tracking landing page tidak diubah oleh project ini.
+Visitor counts, pageviews, UTM/referrer data, and conversion rates are not yet recorded in Neon. The dashboard explicitly identifies unavailable metrics and uses no sample data or estimates. This project does not change landing page tracking.
 
-## Akses internal
+## Internal access
 
-Login menggunakan kunci akses tim acak 256 bit. Tidak ada pendaftaran akun publik. Sesi dienkripsi dan diautentikasi dengan iron-session, berakhir setelah 8 jam, memakai cookie HttpOnly, SameSite=Strict, dan Secure dalam production. Semua pembacaan data dan ekspor diperiksa di server. Percobaan login dibatasi per instance; throttle ini bukan rate limiter global. Untuk rollout besar, tambahkan aturan Vercel Firewall atau provider identitas tim.
+Sign-in uses a random 256-bit team access key. There is no public account registration. Sessions are encrypted and authenticated with iron-session, expire after eight hours, and use HttpOnly, SameSite=Strict cookies with Secure enabled in production. Every data read and export is checked on the server. Login attempts are throttled per instance; this is not a global rate limiter. For a larger rollout, consider Vercel Firewall rules or a team identity provider.
 
-Untuk mengganti akses: buat kunci baru menggunakan generator kriptografis, simpan sebagai `DASHBOARD_ACCESS_KEY`, dan ganti `SESSION_SECRET` untuk membatalkan seluruh sesi yang lama. Secret sesi minimal 32 karakter. Kunci akses minimal 32 karakter dan harus tetap memiliki entropi tinggi; jangan menggantinya dengan password pendek.
+To rotate access, generate a new cryptographic key, set `DASHBOARD_ACCESS_KEY`, and replace `SESSION_SECRET` to invalidate existing sessions. Both values must be at least 32 characters. Preserve high entropy rather than substituting a short password.
 
-CSV mengikuti filter aktif, dibatasi 10.000 baris per ekspor, memakai UTF-8 BOM dan escape kutip/baris baru. Nilai yang dapat menjadi formula spreadsheet dinetralkan. Data kontak di CSV tetap merupakan data internal.
+CSV exports follow the active filters, are limited to 10,000 rows, and use a UTF-8 BOM with quote and newline escaping. Spreadsheet formula values are neutralized. Exported contact information remains internal team data.
 
-## Validasi
+## Validation
 
 ```sh
 npm run build
@@ -54,18 +54,12 @@ npm run typecheck
 npm test
 ```
 
-## Vercel
+## Deployment
 
-Project Vercel dan tiga environment variables sudah disiapkan untuk development, preview, dan production. Workspace lokal ditautkan melalui `.vercel/project.json` yang diabaikan Git. Tidak ada integrasi Git otomatis yang dipasang.
+Source: [Enemites/Dashboard](https://github.com/Enemites/Dashboard).
 
-Deployment awal sudah aktif di https://enemites-analytics.vercel.app. Vercel menandai deployment pertama project baru sebagai production, meskipun dibuat dengan target preview. Domain dashboard meminta kunci akses tim; URL deployment unik juga dilindungi Vercel Authentication. Website landing page yang lama tidak diubah. Source project tersedia di [Enemites/Dashboard](https://github.com/Enemites/Dashboard).
+Production: [enemites-analytics.vercel.app](https://enemites-analytics.vercel.app).
 
-Untuk melakukan deployment setelah diotorisasi:
+The GitHub repository is connected to Vercel. Pushing to `main` triggers a production deployment. The three required server environment variables are configured in Vercel; local project metadata is stored in the ignored `.vercel/project.json`.
 
-```sh
-npx vercel --scope nafiszs-projects
-# Production, hanya setelah persetujuan publikasi:
-npx vercel --prod --scope nafiszs-projects
-```
-
-CLI memerlukan login Vercel; connector Vercel di Codex juga dapat digunakan untuk deploy. Kunci akses tetap wajib meskipun Vercel Deployment Protection aktif. Jangan memasukkan `.env.local`, `.setup`, atau hasil ekspor ke Git atau paket deployment.
+The dashboard requires the team access key. Unique deployment URLs may also require Vercel Authentication. Never commit `.env.local`, `.setup`, exports, or other credentials to Git or include them in deployment packages.

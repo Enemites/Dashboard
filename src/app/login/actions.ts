@@ -13,15 +13,15 @@ export async function login(_previous: { error: string }, form: FormData) {
   const now = Date.now();
   for (const [key, value] of attempts) if (value.until < now) attempts.delete(key);
   const entry = attempts.get(ip);
-  if (entry && entry.count >= 8) return { error: "Terlalu banyak percobaan. Coba lagi dalam 15 menit." };
+  if (entry && entry.count >= 8) return { error: "Too many attempts. Try again in 15 minutes." };
   const expected = process.env.DASHBOARD_ACCESS_KEY;
-  if (!expected || expected.length < 32) return { error: "Akses dashboard belum dikonfigurasi." };
+  if (!expected || expected.length < 32) return { error: "Dashboard access has not been configured." };
   const supplied = String(form.get("key") || "").trim();
   const digest = (v: string) => createHash("sha256").update(v).digest();
   if (supplied.length > 200 || !timingSafeEqual(digest(supplied), digest(expected))) {
     if (attempts.size >= 2000) attempts.delete(attempts.keys().next().value!);
     attempts.set(ip, { count: (entry?.count || 0) + 1, until: entry?.until || now + 900000 });
-    return { error: "Kunci akses tidak sesuai. Periksa lalu coba lagi." };
+    return { error: "The access key is incorrect. Check it and try again." };
   }
   attempts.delete(ip);
   const session = await getSession();

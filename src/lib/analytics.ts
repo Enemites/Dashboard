@@ -40,7 +40,7 @@ export async function getAnalytics(filters: Filters): Promise<Analytics> {
     const columns = "id, name, email, phone_number, age_group, receive_updates, country, city, device_type, browser, operating_system, created_at";
     // Fixed columns only. Aggregate in Postgres to avoid many network round trips.
     const groups = ["device_type", "country", "age_group", "browser", "operating_system"].map(column => {
-      const expression = column === "country" ? "CASE WHEN country LIKE 'Local (%)' THEN 'Tidak diketahui' ELSE COALESCE(NULLIF(country, ''), 'Tidak diketahui') END" : `COALESCE(NULLIF(${column}, ''), 'Tidak diketahui')`;
+      const expression = column === "country" ? "CASE WHEN country LIKE 'Local (%)' THEN 'Unknown' ELSE COALESCE(NULLIF(country, ''), 'Unknown') END" : `COALESCE(NULLIF(${column}, ''), 'Unknown')`;
       return `'${column}', (SELECT COALESCE(jsonb_agg(g), '[]'::jsonb) FROM (SELECT ${expression} AS label, count(*)::int AS count FROM selected GROUP BY 1 ORDER BY count DESC, label LIMIT 12) g)`;
     }).join(",");
     const { rows: [{ payload }] } = await client.query<{ payload: Omit<Analytics, "updatedAt" | "start" | "end" | "filters"> }>(`

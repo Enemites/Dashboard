@@ -6,9 +6,9 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Enemites · Internal Analytics",
-  description: "Dashboard internal landing page Enemites",
+  description: "Internal analytics for the Enemites landing page",
   robots: { index: false, follow: false }
 };
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <html lang="id"><body>{children}</body></html>;
+  return <html lang="en"><body>{children}</body></html>;
 }

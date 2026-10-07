@@ -23,6 +23,6 @@ export async function GET(request: Request) {
       "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff"
     } });
   } catch (error) {
-    return Response.json({ error: error instanceof Error && error.message === "EXPORT_LIMIT" ? "Maksimal 10.000 baris. Persempit filter untuk ekspor." : "Ekspor gagal. Coba lagi." }, { status: error instanceof Error && error.message === "EXPORT_LIMIT" ? 413 : 503 });
+    return Response.json({ error: error instanceof Error && error.message === "EXPORT_LIMIT" ? "Export limit: 10,000 rows. Narrow the filters and try again." : "Export failed. Please try again." }, { status: error instanceof Error && error.message === "EXPORT_LIMIT" ? 413 : 503 });
   }
 }
