@@ -13,3 +13,54 @@
 .nav-link{font-size:13px}.metric-label{font-size:12px}td,th{font-size:12px}.person-cell b{font-size:12px}.person-cell small{font-size:12px}.table-heading p{font-size:12px}.table-footer{font-size:12px}.table-scroll{position:relative;min-width:0}.panel{min-width:0}
 @media(max-width:640px){.nav-link{font-size:12px}.metric-label{font-size:11px}.table-heading p{font-size:11px}.table-footer{font-size:10px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+.custom-dates{display:flex;flex-wrap:wrap;align-items:end;gap:12px;margin:-6px 0 24px;padding:16px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.custom-dates label{display:flex;flex-direction:column;gap:7px;color:var(--muted);font-size:11px}
+.custom-dates input,.chart-controls select,.chart-drill select{border:1px solid var(--line);border-radius:5px;background:var(--panel);padding:8px;color:var(--text);font-size:11px;max-width:100%}
+.custom-dates>span{color:var(--muted);font-size:11px;padding-bottom:10px}
+.period-context{color:var(--muted);font-size:11px;line-height:1.7;margin:-10px 0 24px}
+.growth-section{margin:26px 0}
+.section-heading{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:14px}
+.section-heading p{color:var(--muted);font-size:11px;margin-top:7px;line-height:1.6}
+.subtle-pill{border:1px solid var(--line);border-radius:5px;padding:6px 8px;font-size:10px;color:var(--muted);white-space:nowrap}
+.growth-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.growth-card{padding:22px}
+.growth-title{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.growth-title h3{font-size:13px;font-weight:500}
+.growth-title button{border:0;background:none;color:var(--muted);font-size:11px;padding:5px 0}
+.growth-title button:hover{color:var(--accent);text-decoration:underline}
+.growth-value{display:flex;align-items:center;gap:12px;margin:20px 0 12px}
+.growth-value strong{font-size:36px;font-weight:500;letter-spacing:-1px}
+.change-badge{background:var(--raised);color:var(--muted);border-radius:5px;padding:5px 8px;font-size:12px;font-variant-numeric:tabular-nums}
+.change-badge.positive{color:var(--success);background:var(--success-bg)}
+.change-badge.negative{color:#a34f4a;background:#fbf0ef}
+.growth-card p{font-size:11px;line-height:1.7;color:var(--muted)}
+.growth-full{margin-top:7px}
+.record-row{display:flex;justify-content:space-between;gap:12px;font-size:11px;color:var(--muted);margin:20px 0 9px;border-top:1px solid var(--line);padding-top:17px}
+.record-row b{font-weight:500;color:var(--text)}
+.record-track{height:5px;background:var(--raised);border-radius:5px;overflow:hidden}
+.record-track span{display:block;height:100%;background:var(--chart-1)}
+.record-caption{margin-top:9px}
+.chart-controls{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.chart-panel .panel-head{flex-wrap:wrap}
+.chart-drill{display:flex;gap:12px;align-items:end;justify-content:space-between;padding:0 22px 22px}
+.chart-drill label{display:flex;flex-direction:column;gap:7px;color:var(--muted);font-size:10px;min-width:0;flex:1}
+.chart-drill .button{white-space:nowrap;font-size:11px}
+.segment-button{display:block;width:100%;background:none;border:0;padding:3px 0;text-align:left;border-radius:3px}
+.segment-button:hover:enabled{background:var(--raised)}
+.segment-button:disabled{opacity:1;cursor:default}
+.segment-button .bar-track{margin-bottom:0}
+.health-panel{margin:20px 0}
+.health-panel>.panel-note{padding:0 22px}
+.health-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;padding:0 22px 20px}
+.health-summary div{display:flex;flex-direction:column;gap:8px;min-width:0}
+.health-summary span,.health-summary small{font-size:11px;color:var(--muted);line-height:1.6}
+.health-summary b{font-weight:500;font-size:18px}
+.health-explanation{margin:0 22px 24px;font-size:11px;color:var(--muted);line-height:1.8;border-top:1px solid var(--line);padding-top:16px}
+.quality-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;padding:0 22px 20px}
+.quality-label{display:flex;justify-content:space-between;gap:10px;font-size:11px}
+.quality-label b{font-weight:400;color:var(--muted)}
+.quality-grid small{color:var(--muted);font-size:10px}
+.quality-grid .bar-track{margin-bottom:8px}
+@media(max-width:1050px){.growth-grid{grid-template-columns:1fr}.health-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.quality-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.section-heading{align-items:start;flex-direction:column;gap:10px}.growth-card{padding:18px 16px}.growth-title button{font-size:10px}.chart-drill{padding-inline:16px;flex-wrap:wrap}.chart-drill label{flex-basis:100%}.chart-drill .button{width:100%}.custom-dates label{flex:1;min-width:115px}.custom-dates input{width:100%;min-width:0}.custom-dates>span{flex-basis:100%;padding:0}.filter-row select{max-width:155px}.quality-grid{grid-template-columns:1fr}.quality-label{font-size:12px}.health-panel .panel-head{flex-wrap:wrap}.health-summary{gap:16px}.health-summary b{font-size:16px}.data-line{flex-wrap:wrap}.chart-controls{justify-content:start}.chart-controls select{padding:6px}.chart-total{flex-wrap:wrap}}

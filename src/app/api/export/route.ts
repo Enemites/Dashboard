@@ -1,6 +1,7 @@
 import { getSession } from "@/lib/session";
 import { parseFilters, whereClause, csvCell } from "@/lib/filters";
 import { readDatabase } from "@/lib/database";
+import { periodBounds } from "@/lib/metrics";
 export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   const session = await getSession();
@@ -10,8 +11,8 @@ export async function GET(request: Request) {
   try {
     const rows = await readDatabase(async client => {
       const { rows: [clock] } = await client.query("SELECT now()::text AS now, date_trunc('day', now() AT TIME ZONE 'Asia/Jakarta') AT TIME ZONE 'Asia/Jakarta' AS today");
-      const start = filters.range === "all" ? null : new Date(new Date(clock.today).getTime() - (Number(filters.range) - 1) * 86400000).toISOString();
-      const w = whereClause(filters, start, new Date(clock.now).toISOString(), true);
+      const { start, end } = periodBounds(filters, new Date(clock.now));
+      const w = whereClause(filters, start, end, true);
       const { rows: [count] } = await client.query(`SELECT count(*)::int AS total FROM public.waitlist WHERE ${w.sql}`, w.values);
       if (count.total > 10000) throw new Error("EXPORT_LIMIT");
       return (await client.query(`SELECT name, email, phone_number, age_group, receive_updates, country, city, device_type, browser, operating_system, created_at::text FROM public.waitlist WHERE ${w.sql} ORDER BY created_at DESC, id DESC`, w.values)).rows;
