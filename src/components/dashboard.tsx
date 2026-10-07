@@ -7,6 +7,7 @@ import { logout } from "@/app/login/actions";
 import type { Analytics, Signup } from "@/lib/analytics";
 import type { Filters } from "@/lib/filters";
 import { SignupChart, Segments } from "./charts";
+import { BrandMark } from "./brand-mark";
 
 const number = (n: number) => n.toLocaleString("en-US");
 function date(value: string | null, time = false) { return value ? new Date(value).toLocaleString("en-US", { timeZone: "Asia/Jakarta", day: "numeric", month: "short", year: "numeric", ...(time ? { hour: "2-digit", minute: "2-digit" } : {}) }) : "—"; }
@@ -51,7 +52,7 @@ export function Dashboard({ data, filters, view }: { data: Analytics | null; fil
   const activeFilters = Boolean(filters.device || filters.age || filters.updates);
   return <div className="workspace"><a className="skip-link" href="#main">Skip to main content</a>
     {menuOpen && <button className="mobile-scrim" aria-label="Close navigation" onClick={() => setMenuOpen(false)}/>}
-    <aside className={`sidebar ${menuOpen ? "open" : ""}`}><Link href="/" className="brand"><span className="brand-mark">e</span><span>enemites<small>ANALYTICS</small></span></Link>
+    <aside className={`sidebar ${menuOpen ? "open" : ""}`}><Link href="/" className="brand"><BrandMark/><span>Enemites<small>ANALYTICS</small></span></Link>
       <div className="workspace-switch"><span className="workspace-avatar">E</span><span>Enemites workspace<small>Landing page</small></span><CaretDownIcon size={13}/></div>
       <div className="nav-label">WORKSPACE</div><nav aria-label="Main navigation">{navigation.map(item => <Link key={item.id} href={viewHref(item.id)} onClick={() => setMenuOpen(false)} className={`nav-link ${view === item.id ? "active" : ""}`} aria-current={view === item.id ? "page" : undefined}><item.icon size={19}/>{item.label}{item.id === "waitlist" && data && <span className="nav-count">{data.all.total}</span>}</Link>)}</nav>
       <div className="nav-label system-label">SYSTEM</div><Link className={`nav-link ${view === "sources" ? "active" : ""}`} href={viewHref("sources")} onClick={() => setMenuOpen(false)}><DatabaseIcon size={19}/>Data sources</Link>

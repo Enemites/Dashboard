@@ -21,9 +21,13 @@ Open [http://127.0.0.1:3000](http://127.0.0.1:3000). For a new setup, create `.e
 
 Required server environment variables: `DATABASE_URL`, `DASHBOARD_ACCESS_KEY`, and `SESSION_SECRET`. Never use the `NEXT_PUBLIC_` prefix for secrets.
 
+Production, Preview, and Development values are stored as **Secret** environment variables in the Vercel project settings. The application reads them through `process.env` in server-only modules. `.env.example` contains empty placeholders; `.env.local` is used only for local development and is excluded from Git and deployment uploads.
+
 The database connection must use a role with access only to the required tables and columns. See `database/reader-grants.sql` for grants; run them as the database owner after creating a dedicated LOGIN role. Do not use the database owner's credentials in the dashboard.
 
 ## Features and metric definitions
+
+The logo and favicon reuse the original PNG assets from the waitlist landing page's `public/assets/logo.png` and `public/assets/favicon.png`. The dashboard keeps its neutral internal workspace palette.
 
 - Registration totals, update opt-ins, recorded countries, and daily or cumulative charts.
 - Audience breakdowns by age, device, country, browser, and operating system.
